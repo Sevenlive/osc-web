@@ -44,7 +44,21 @@ io.on('connection', function (socket) {
     oscServer.on('message', function (msg, rinfo) {
       msg.splice(0, 2);
       //console.log(msg);
-      socket.emit('message', msg);
+      var Ausgabe = [];
+      msg.forEach(element => {
+        if(element[0].includes("framerate"))
+        {
+          Ausgabe.push(element);
+        }
+        else if(element[0].includes("mixer/audio/volume"))
+        {
+          element[1] = 20 * (Math.log10(element[1]/ 2147483647));
+          element[2] = 20 * (Math.log10(element[2]/ 2147483647));
+          Ausgabe.push(element);
+        }
+        
+      });
+      socket.emit('message', Ausgabe);
     });
   });
   socket.on("disconnect", function () {
