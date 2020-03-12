@@ -46,9 +46,9 @@ Received from an OSC app/device at : <div id="status"></div>
         );
     });
 
-    socket.on('message', function(obj) {
+    socket.on('Stats', function(obj) {
         var status = document.getElementById("status");
-        status.innerHTML = obj[0];
+        status.innerHTML = obj.CPULoad + " %";
         console.log(obj);
     });
 </script>
