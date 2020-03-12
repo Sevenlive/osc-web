@@ -1,0 +1,26 @@
+####
+# ##### LOUDNESS SWITCH ######
+# v 1.0
+#
+#
+#
+# ATENTION:
+# Replace all occurences of RTMP-WEB with your project's name
+####
+
+# v2 syntax
+version: '2'
+
+services:
+
+  # OSC-WEB
+  # OSC Communication and Systemstats
+  osc-web_debug:
+    image: sevenlive/osc-web
+    container_name: osc-debug
+    entrypoint: /bin/bash
+    volumes:
+        - .:/usr/src/app
+    ports:
+      - "10811:8081"
+

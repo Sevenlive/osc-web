@@ -5,7 +5,7 @@ var osc = require('node-osc'),
 
 var oscServer, oscClient;
 
-var Systeminfo;
+var Systeminfo, NetworkInterface;
 var CPULoad, TotalMemory, UsedMemory, RXSec, TXSec;
 function sendSystemHealth(socket) {
   si.currentLoad()
@@ -19,8 +19,10 @@ function sendSystemHealth(socket) {
       UsedMemory = pretty(data.used);
     })
     .catch(error => console.error(error));
-
-    si.networkStats('Ethernet')
+    si.networkInterfaceDefault(function(data) {
+      NetworkInterface = data;
+    })
+    si.networkStats(NetworkInterface)
     .then(data => {
         RXSec = pretty(data[0].rx_sec);
         TXSec = pretty(data[0].tx_sec);
@@ -40,9 +42,9 @@ io.on('connection', function (socket) {
     console.log(socket.id + " connected");
 
     oscServer.on('message', function (msg, rinfo) {
+      msg.splice(0, 2);
+      //console.log(msg);
       socket.emit('message', msg);
-      console.log(msg);
-      //console.log('sent OSC message to WS', msg, rinfo);
     });
   });
   socket.on("disconnect", function () {
